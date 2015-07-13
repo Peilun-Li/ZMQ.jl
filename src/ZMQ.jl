@@ -3,7 +3,7 @@
 module ZMQ
 
 using Base
-import Base.convert, Base.ref, Base.get, Base.bytestring
+import Base.convert, Base.getindex, Base.get, Base.bytestring
 
 export 
     #Types
@@ -343,7 +343,7 @@ end
 
 # Convert message to array of Uint8 with Uint8[zmsg]
 # Copies the data
-function ref(::Type{Uint8}, zmsg::ZMQMessage)
+function getindex(::Type{Uint8}, zmsg::ZMQMessage)
     len = msg_size(zmsg)
     data = Array(Uint8, len)
     ccall(:memcpy, Ptr{Void}, (Ptr{Void}, Ptr{Void}, Uint),
@@ -352,7 +352,7 @@ function ref(::Type{Uint8}, zmsg::ZMQMessage)
 end
 # Convert message to string with ASCIIString[zmsg]
 # Copies the data
-ref(::Type{ASCIIString}, zmsg::ZMQMessage) = bytestring(msg_data(zmsg), msg_size(zmsg))
+getindex(::Type{ASCIIString}, zmsg::ZMQMessage) = bytestring(msg_data(zmsg), msg_size(zmsg))
 bytestring(zmsg::ZMQMessage) = bytestring(msg_data(zmsg), msg_size(zmsg))
 # Build an IOStream from a message
 # Copies the data
