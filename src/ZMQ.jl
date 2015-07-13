@@ -357,8 +357,10 @@ bytestring(zmsg::ZMQMessage) = bytestring(msg_data(zmsg), msg_size(zmsg))
 # Build an IOStream from a message
 # Copies the data
 function convert(::Type{IOStream}, zmsg::ZMQMessage)
+    len = msg_size(zmsg)
+    a = pointer_to_array(msg_data(zmsg), (len,))
     s = IOBuffer()
-    write(s, zmsg)
+    write(s, a)
     return s
 end
 # Close a message. You should not need to call this manually (let the
